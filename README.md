@@ -12,7 +12,7 @@ Variable | Description | Example
 --- | --- | ---
 `DOOFY_PORT` | Lets chat port | `443`
 `DOOFY_HOSTNAME` | The hostname to your lets-chat-instance | `chat.doofys-server.com`
-`DOOFY_PROTOCOL` | The used protocol | `http` or `https'
+`DOOFY_PROTOCOL` | The used protocol | `http` or `https`
 `DOOFY_TOKEN` | Your access token |  `NTU2MDN..Tg1ZDM1Y==`
 
 ### Run
