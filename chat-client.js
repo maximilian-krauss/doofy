@@ -61,7 +61,7 @@ ChatClient.prototype.newMessages = function() {
         message: message,
         mentioned: _hasBeenMentioned(that.account, message),
         you: that.account,
-        response: function(responseMessage) {
+        respond: function(responseMessage) {
           that.sendMessage(responseMessage, message.room.id);
         }
       });

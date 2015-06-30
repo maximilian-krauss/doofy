@@ -33,7 +33,7 @@ var clientSubscription = client.connect(chatUrl).subscribe(
       .subscribe(function(message) {
         console.log('new message arrived:'.green, message);
 
-        message.response('Ok, I get that!');
+        message.respond('Ok, I get that!');
       });
   },
   function(err) {
