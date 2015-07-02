@@ -2,7 +2,8 @@ var _ = require('lodash'),
     colors = require('colors'),
     url = require('url'),
     e = require('dotenv').load()
-    Client = require('./chat-client');
+    Client = require('./chat-client'),
+    PluginManager = require('./plugins/');
 
 var protocol = process.env.DOOFY_PROTOCOL
     hostname = process.env.DOOFY_HOSTNAME,
@@ -18,11 +19,26 @@ var chatUrl = url.format({
   }
 });
 
+var config = {
+  activePlugins: {
+    listener: ['foo-listener'],
+    tasks: []
+  },
+  pluginConfigurations: {
+    foo: {
+      bar: true
+    }
+  }
+};
+
 var client = new Client(chatUrl);
+var pluginManager = new PluginManager(client, config);
 
 var clientSubscription = client.connect(chatUrl).subscribe(
   function() {
     console.log('connected');
+
+    pluginManager.initialize();
 
     client.rooms()
       .subscribe(function(rooms) {
