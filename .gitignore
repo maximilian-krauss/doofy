@@ -14,4 +14,4 @@ npm-debug.log
 *.csr
 .env
 
-config.yml
+config.json

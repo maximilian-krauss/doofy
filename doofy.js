@@ -1,55 +1,44 @@
 var _ = require('lodash'),
     colors = require('colors'),
     url = require('url'),
-    e = require('dotenv').load()
     Client = require('./chat-client'),
-    PluginManager = require('./plugins/');
+    PluginManager = require('./plugins/'),
+    userConfig = require('./config.json');
 
-var protocol = process.env.DOOFY_PROTOCOL
-    hostname = process.env.DOOFY_HOSTNAME,
-    port = process.env.DOOFY_PORT,
-    token = process.env.DOOFY_TOKEN;
-
-var chatUrl = url.format({
-  protocol: protocol,
-  hostname: hostname,
-  port: port,
-  query: {
-    token: token
-  }
-});
-
-var config = {
-  activePlugins: {
-    listener: ['foo-listener'],
-    tasks: []
+var defaultConfig = {
+  chat: {
+    protocol: '',
+    hostname: '',
+    post: '',
+    token: ""
   },
-  pluginConfigurations: {
-    foo: {
-      bar: true
-    }
-  }
+  activePlugins: {
+    listener: [],
+    jobs: []
+  },
+  pluginConfigurations: { }
 };
 
-var client = new Client(chatUrl);
-var pluginManager = new PluginManager(client, config);
+var config = _.assign(defaultConfig, userConfig),
+    chatUrl = url.format({
+      protocol: config.chat.protocol,
+      hostname: config.chat.hostname,
+      port: config.chat.port,
+      query: {
+        token: config.chat.token
+      }
+    }),
+    client = new Client(chatUrl),
+    pluginManager = new PluginManager(client, config);
 
-var clientSubscription = client.connect(chatUrl).subscribe(
-  function() {
-    console.log('connected');
+var clientSubscription = client.connect(chatUrl).subscribe(function() {
+    console.log('connected'.green);
 
     pluginManager.initialize();
 
     client.rooms()
       .subscribe(function(rooms) {
         client.subscribeToRooms(rooms);
-      });
-
-    client.newMessages()
-      .subscribe(function(message) {
-        console.log('new message arrived:'.green, message);
-
-        message.respond('Ok, I get that!');
       });
   },
   function(err) {

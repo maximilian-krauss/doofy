@@ -43,7 +43,7 @@ ChatClient.prototype.subscribeToRooms = function(rooms) {
 
   _.forEach(rooms, function(room) {
     that.socket.emit('rooms:join', room.id, function(room) {
-      console.log('Room joined:'.gray, room.name.gray);
+      console.log('> Doofy joined:'.gray, room.name.gray);
     });
   });
 };
@@ -63,6 +63,9 @@ ChatClient.prototype.newMessages = function() {
         you: that.account,
         respond: function(responseMessage) {
           that.sendMessage(responseMessage, message.room.id);
+        },
+        matches: function(pattern) {
+          return pattern.test(this.message.text);
         }
       });
     });
@@ -78,13 +81,10 @@ ChatClient.prototype.connect = function() {
   that.socket = io.connect(that.url);
 
   return Rx.Observable.create(function(observer) {
-
     that.socket.on('connect', function() {
-
       that.socket.emit('account:whoami', function(account) {
         that.account = account;
       });
-
       observer.onNext();
     });
 
